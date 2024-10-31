@@ -1,0 +1,5 @@
+Fixed a display issue when some special characters (such as quotation marks) are used as text box values
+
+--This line, and those below, will be ignored--
+
+M    formHelper.php

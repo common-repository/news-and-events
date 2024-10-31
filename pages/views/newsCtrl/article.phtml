@@ -1,0 +1,41 @@
+<?php
+echo "<div class='news_and_events ne_article_view'>";
+
+	//Headline
+	echo "<h2 class='ne_headline'>" . $news_4c5c429147dc8->headline . "</h2>";
+	
+	//Image
+	if ($settings_4c5c4291484df['article_image_display'] == 'thumbnail') {
+		if ($news_4c5c429147dc8->has_thumbnail()) {
+			echo "<a class='ne_thumbnail' href='" . $news_4c5c429147dc8->imageURL() . "'>";
+			echo "<img src='" .  $news_4c5c429147dc8->thumbnailURL() . "' /></a>";		
+		}
+	} elseif ($settings_4c5c4291484df['article_image_display'] == 'full') {
+		if ($news_4c5c429147dc8->has_image()) {
+			echo "<img class='ne_image' src='" . $news_4c5c429147dc8->imageURL() . "' />";
+		}
+	}
+	
+	//Date
+	if (($settings_4c5c4291484df['article_show_date']) && ($news_4c5c429147dc8->has_date())) {
+		echo "<small class='ne_date'>" . $news_4c5c429147dc8->format_date($settings_4c5c4291484df['article_date_format']) . "</small>";
+	}
+	
+	//Author
+	if (($settings_4c5c4291484df['article_show_author']) && ($news_4c5c429147dc8->has_date())) {
+		echo "<small class='ne_author'> by " . $news_4c5c429147dc8->author . "</small>";
+	}
+	
+	//Tags
+	if (($settings_4c5c4291484df['article_show_tags']) && ($news_4c5c429147dc8->has_tags())) {
+		echo "<small class='ne_tags'> tagged as " . ne_newsHelper_tag_links($news_4c5c429147dc8) . "</small>";
+	}
+	
+	//Article
+	if ($news_4c5c429147dc8->has_article()) {
+		echo "<span class='ne_article'>" . $news_4c5c429147dc8->article . "</span>";
+	}
+
+echo "</div>";	
+?>
+

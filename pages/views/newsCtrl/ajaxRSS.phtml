@@ -1,0 +1,21 @@
+<?php echo "<?"?>xml version="1.0" ?>
+<rss version="2.0">
+	<channel>
+		<title>News</title>
+		<link><?php echo get_bloginfo('url') ?></link>
+		<description>What's been going on</description>
+		<language>en-us</language>
+		
+		<?php while($news = $newsItems_4c5c4291497f5->next()): ?>
+		<item>
+			<title><?php echo $news->headline ?></title>
+			<?php if($article_landing_page_4c5c4291497f5 != -1): ?>
+				<link><?php echo get_permalink($article_landing_page_4c5c4291497f5) ?>?ktf=ktf_<?php echo ne_get_plugin_folder() ?>/newsCtrl/article/id=<?php echo $news->id ?></link>
+			<?php else: ?>
+				<link><?php bloginfo('url') ?>?ktf=ktf_<?php echo ne_get_plugin_folder() ?>/newsCtrl/article/id=<?php echo $news->id ?></link>
+			<?php endif; ?>
+			<description><?php echo $news->article ?></description>
+		</item>
+		<?php endwhile; ?>
+	</channel>
+</rss>

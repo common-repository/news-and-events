@@ -1,0 +1,46 @@
+<div class='wrap'>
+<h2>Edit News</h2>
+
+<?php
+
+$form = new ne_Form( "update", ne_get_plugin_folder() . "/pages/newsCtrlAdmin", "newsitemEditForm");
+$form->values = $newsItem_4c5c42914ad5f;
+
+$form->setInstructions(array(
+	"headline" => "The headline of the news item",
+	"author" => "Who wrote this article?",
+	"article" => "Any additional information",
+	"excerpt" => "A brief description of the news item",
+	"date" => "An associated date. E.g. 8/10/92. Defaults to the current date."
+) );
+
+$form->addNonce();
+
+$form->addHidden(array('field_name' => 'id'));
+
+$form->addTextField(array('field_name' => 'headline'));
+
+$form->addTextField(array('field_name' => 'author'));
+
+$form->addTextArea(array('field_name' => 'article'));
+
+$form->addTextArea(array('field_name' => 'excerpt'));
+
+$form->addTextField(array('field_name' => 'date', 'value' => $newsItem_4c5c42914ad5f->editable_date()));
+
+$form->addTextField(array('field_name' => 'tags', 'value' => $newsItem_4c5c42914ad5f->tag_str('')));
+
+$form->addPhotoUpload(array('field_name' => 'image'));
+
+if($newsItem_4c5c42914ad5f->has_image()) {
+	echo "<a style='float: left; padding-right: 10px' href='{$newsItem_4c5c42914ad5f->imageURL()}'><img src='{$newsItem_4c5c42914ad5f->thumbnailURL()}' /></a>";
+	$form->addCheckbox(array('label' => 'Remove Image', 'field_name' => 'remove_image'));
+}
+
+echo "<div style='clear: both; padding-top: 7px' />";
+$form->addCheckbox(array('field_name' => 'published'));
+
+$form->addSubmit("Update News &raquo;");
+?>
+
+</div>

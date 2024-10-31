@@ -1,0 +1,41 @@
+<div class='wrap'>
+<h2>Edit Event</h2>
+<?php
+$form = new ne_Form( "update", ne_get_plugin_folder() . "/pages/eventsCtrlAdmin", "eventEditForm" );
+$form->values = $event_4c5c42914efb8;
+
+
+$form->setInstructions(array(
+	"title" => "The title of the event",
+	"text" => "Any additional information",
+	"date" => "An associated date. E.g. 8/10/92"
+) );
+
+$form->addNonce();
+$form->addHidden(array('field_name' => 'id'));
+
+$form->addTextField(array('field_name' => 'title'));
+$form->addTextField(array('field_name' => 'start_date', 'value' => $event_4c5c42914efb8->editableStartDate()));
+$form->addTextField(array('field_name' => 'end_date', 'value' => $event_4c5c42914efb8->editableEndDate()));
+$form->addTextField(array('field_name' => 'location'));
+
+
+$form->addTextArea(array('field_name' => 'date_location_text',
+						'rows' => 3));
+$form->addTextArea(array('field_name' => 'short_description'));
+$form->addTextArea(array('field_name' => 'long_description'));
+?>
+<a href=' <?php echo $event_4c5c42914efb8->imageURL() ?>'><img src='<?php echo $event_4c5c42914efb8->thumbnailURL() ?>' /></a>
+<?php
+$form->addPhotoUpload(array('field_name' => 'image'));
+
+$form->addTextField(array('field_name' => 'tags', 
+	'value' => $event_4c5c42914efb8->tag_str('')));
+
+$form->addCheckbox(array('field_name' => 'published'));
+
+$form->addSubmit("Update Event &raquo;");
+
+?>
+
+</div>

@@ -1,0 +1,60 @@
+<?php
+echo "<div class='news_and_events ne_event_detail_view'>";
+
+	//Title
+	echo "<span class='ne_title'>" . $event_4c5c42914efb8->title . "</span>";
+	
+	//Image
+	if ($settings_4c5c4291484df['eventDetail_image_display'] == 'thumbnail') {
+		echo "<a class='ne_thumbnail' href='" . $event_4c5c42914efb8->imageURL() . "'>";
+		echo "<img src='" . $event_4c5c42914efb8->thumbnailURL() . "' /></a>";
+	} elseif($settings_4c5c4291484df['eventDetail_image_display'] == 'full') {
+		echo "<img class='ne_image' src='" . $event_4c5c42914efb8->imageURL() . "' />";
+	}
+		
+	//Start date
+	if (($settings_4c5c4291484df['eventDetail_show_start_date']) && ($event_4c5c42914efb8->has_start_date())) {
+		echo "<span class='ne_date'";
+			echo "<span class='ne_start_date'>" . $event_4c5c42914efb8->start_date_formatted($settings_4c5c4291484df['eventDetail_date_format']) . "</span>";
+			
+			//End date
+			if (($settings_4c5c4291484df['eventDetail_show_end_date']) && ($event_4c5c42914efb8->has_end_date())) {
+				echo "<span class='ne_end_date'> - " . $event_4c5c42914efb8->end_date_formatted($settings_4c5c4291484df['eventDetail_date_format']) . "</span>";
+			}
+		echo '</span>';
+	}
+	
+	//Location
+	if (($settings_4c5c4291484df['eventDetail_show_location']) && ($event_4c5c42914efb8->has_location())) {
+		echo "<span class='ne_location'>" . $event_4c5c42914efb8->location . "</span>";
+	}
+	
+	//Date-Location field
+	if (($settings_4c5c4291484df['eventDetail_show_date_location_description']) && ($event_4c5c42914efb8->has_date_location_text())) {
+		echo "<span class='ne_date_location_text'>" . $event_4c5c42914efb8->date_location_text . "</span>";
+	}
+	
+	//Tags
+	if (($settings_4c5c4291484df['eventDetail_show_tags']) && ($event_4c5c42914efb8->has_tags())) {
+		echo "<span class='ne_tags'> tagged as " . ne_eventsHelper_tag_links($event_4c5c42914efb8) . "</span>";
+	}
+		
+	//Short Description
+	if ($settings_4c5c4291484df['eventDetail_show_short_description']) {
+		if ($event_4c5c42914efb8->has_short_description()) {
+			//This event has a short description so display it
+			echo "<span class='ne_short_description'>" . $event_4c5c42914efb8->short_description . "</span>";
+		}
+	}
+		
+	//Long Description
+	if ($settings_4c5c4291484df['eventDetail_show_long_description']) {
+		if ($event_4c5c42914efb8->has_long_description()) {
+			//This event has a long description so display it
+			echo "<span class='ne_long_description'>" . $event_4c5c42914efb8->long_description . "</span>";
+		}
+	}
+
+echo "</div>";	
+
+?>

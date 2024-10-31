@@ -1,0 +1,75 @@
+jQuery(document).ready(function() {
+	jQuery("#newsitem-headlines").sortable({
+		sort: function() {
+			jQuery(this).children('.ui-sortable-helper').addClass('moving');
+		},
+		stop: function() {
+			var item = jQuery("#newsitem-headlines li.moving");
+			var index = jQuery("#newsitem-headlines li").index(jQuery(item));
+			var id = parseInt(item.attr('id').replace('newsitem-', ''));
+			
+			if(index == 0) { //User is trying to tack it to the top, which requires special handling
+				jQuery("#time-at-top").show();
+
+				jQuery.get('<?php echo ne_urlHelper_ajaxURL(array("controller" => "newsCtrlAdmin", "action" => "ajaxTackHeadlineToTop")); ?>', {
+					id: id
+				});
+			}
+			else {
+				//If the top element hasn't been stuck to the top, remove the "Time-at-top" box
+				if(false == jQuery("#newsitem-headlines li").eq(0).hasClass('stuck')) {
+					jQuery("#time-at-top").hide();
+				}
+
+				//Fire the request to newsandevents/newsCtrlAdmin/ajaxTackHeadline
+				jQuery.get('<?php echo ne_urlHelper_ajaxURL(array("controller" => "newsCtrlAdmin", "action" => "ajaxTackHeadline")); ?>', {
+					id: id,
+					positionFromTop: index 
+				});
+			}
+			
+			if(item.children('a').length == 0) {
+				item.append("<a href='<?php echo ne_urlHelper_adminURL(array('controller' => 'newsCtrlAdmin', 'action' => 'resetHeadline', 'arguments' => 'id={ID}')) ?>'>(reset)</a>".replace("{ID}", id));
+			}
+
+			//Update the list to reflect which items won't appear on the headlines view
+			var counter = 0;
+			var headlines_num_items = jQuery("#headlines_num_items").val();
+			jQuery("#newsitem-headlines li").each(function() {
+				jQuery(this).removeClass('archived');
+				if(counter >= headlines_num_items) {
+					jQuery(this).addClass('archived');
+				}
+				counter++;
+			});
+			item.removeClass('moving').addClass('stuck');
+		}
+	});
+
+	jQuery("input#time-at-top-submit").click(function() {
+		var item = jQuery(this);
+		item.val('Setting...');
+		jQuery.get('<?php echo ne_urlHelper_ajaxURL(array("controller" => "newsCtrlAdmin", "action" => "ajaxSetTimeAtTop")); ?>', {
+			day: jQuery('#time-at-top-day').val(),
+			month: jQuery('#time-at-top-month').val(),
+			year: jQuery('#time-at-top-year').val()
+		});
+		item.val('Set');
+	});
+
+	//if the user changes the month, makes sure the right number of days is shown for that month
+	jQuery("#time-at-top-month option").click(function() {
+		var item = jQuery(this);
+		var days = jQuery("#time-at-top-day");
+		var year = jQuery("#time-at-top-year option:selected").val();
+
+		var daysInMonth = 32 - new Date(year, item.val() - 1, 32).getDate();
+		
+		days.empty();
+
+		for(var i = 1; i <= daysInMonth; i++) {
+			days.append("<option value='" + i + "'>" + i + "</option");
+		}
+	});
+});
+

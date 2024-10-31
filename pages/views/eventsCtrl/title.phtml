@@ -1,0 +1,67 @@
+<?php 
+echo "<div class='news_and_events ne_event_title_view'>";
+
+	echo '<table><tbody>';
+		while( ($event = $events_4c5c42914e22d->next() ) !== null ) {
+			//One table row for each event
+			echo '<tr>';
+			
+				//Thumbnail
+				if ($settings_4c5c4291484df['eventTitle_show_thumbnail_image']) {
+					//Settings call for a thumbnail so create the table cell
+					echo '<td class="ne_column_1">';
+					if ($event->has_thumbnail()) {
+						//This event has a thumbnail so display it
+						echo "<a class='ne_thumbnail' href='" . $event->imageURL() . "'><img src='" . $event->thumbnailURL() . "' /></a>";
+					}
+					echo '</td>';
+				} 
+				
+				//Create a table cell for Title, Dates, Location & tags
+				echo '<td class="ne_column_2">';
+				
+					//Title link
+					if (($settings_4c5c4291484df['eventTitle_show_title']) && ($event->has_title())) {
+						echo "<span class='ne_title'>" . ne_eventsHelper_detail_link($event->id, $event->title) . "</span>";
+					}
+				
+					//Start date 
+					if (($settings_4c5c4291484df['eventTitle_show_start_date']) && ($event->has_start_date())) {
+						echo "<span class='ne_date'";
+							echo "<span class='ne_start_date'>" . $event->start_date_formatted($settings_4c5c4291484df['eventTitle_date_format']) . "</span>";
+						
+							//End date
+							if (($settings_4c5c4291484df['eventTitle_show_end_date']) && ($event->has_end_date())) {
+								echo "<span class='ne_end_date'> - " . $event->end_date_formatted($settings_4c5c4291484df['eventTitle_date_format']) . "</span>";
+							}
+						echo '</span>';
+					}
+					
+					//Location
+					if (($settings_4c5c4291484df['eventTitle_show_location']) && ($event->has_location())) {
+						echo "<span class='ne_location'>" . $event->location . "</span>";
+					}
+					
+					//Date-Location field
+					if (($settings_4c5c4291484df['eventTitle_show_date_location_description']) && ($event->has_date_location_text())) {
+						echo "<span class='ne_date_location'>" . $event->date_location_text . "</span>";
+					}
+				echo '</td>';
+				
+				//Short Description
+				if ($settings_4c5c4291484df['eventTitle_show_short_description']) {
+					//Settings call for a short description so create a cell for it
+					echo '<td class="ne_column_3">';
+					if ($event->has_short_description()) {
+						//This event has a short description so display it
+						echo "<span class='ne_short_description'>" . $event->short_description . "</span>";
+					}
+					echo '</td>';
+				}
+			echo '</tr>';
+			
+		}
+	echo '</tbody></table>';
+
+echo "</div>";	
+?>

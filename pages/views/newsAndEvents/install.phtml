@@ -1,0 +1,33 @@
+<?php
+$newsURL = ne_urlHelper_adminURL(array(
+	'controller' 	=> 'newsCtrlAdmin',
+	'action' 	=> 'index'
+));
+
+$eventsURL = ne_urlHelper_adminURL(array(
+	'controller' 	=> 'eventsCtrlAdmin',
+	'action' 	=> 'index'
+));
+?>
+
+<?php if(count($errors_4c5c429146f18) > 0): ?>
+	<h2>News & Events had a problem installing.</h2>
+	<?php foreach($errors_4c5c429146f18 as $error): ?>
+		<p><strong>Error:</strong> <?php echo $error ?></p>
+	<?php endforeach; ?>
+<?php elseif($alreadyInstalled_4c5c429146f18 == true): ?>
+	<h2>News & Events is Already Installed</h2>
+	<p>You can go ahead and start adding News &amp; Events.</p>
+	<p><a href='<?php echo $newsURL ?>'>News</a></p>
+	<p><a href='<?php echo $eventsURL ?>'>Events</a></p>
+<?php elseif(count($warnings_4c5c429146f18) > 0): ?>
+	<h2>Incomplete Install</h2>
+	<?php foreach($warnings_4c5c429146f18 as $warning): ?>
+		<p><strong>Warning:</strong> <?php echo $warning ?></p>
+	<?php endforeach; ?>
+<?php else: ?>
+	<h2>News &amp; Events Installed Successfully!</h2>
+	<p>You can go ahead and start using News &amp; Events.</p>
+	<p><a href='<?php echo $newsURL ?>'>News</a></p>
+	<p><a href='<?php echo $eventsURL ?>'>Events</a></p>
+<?php endif; ?>

@@ -1,0 +1,36 @@
+<?php
+$form = new ne_Form( "create", ne_get_plugin_folder() . "/pages/newsCtrlAdmin", "newsitemAddForm" );
+$form->values = new ne_NewsItem();
+?>
+<div class='wrap'>
+<h2>Add News</h2>
+<?php
+$form->setInstructions(array(
+	"headline" => "The headline of the news item",
+	"author" => "Who wrote this article?",
+	"article" => "Any additional information",
+	"exceprt" => "A brief description of the news item",
+	"date" => "An associated date. E.g. 8/10/92. Defaults to the current date."
+) );
+
+$form->addNonce();
+
+$form->addTextField(array('field_name' => 'headline'));
+
+$form->addTextField(array('field_name' => 'author'));
+
+$form->addTextArea(array('field_name' => 'article'));
+
+$form->addTextArea(array('field_name' => 'excerpt'));
+
+$form->addTextField(array('field_name' => 'date'));
+
+$form->addTextField(array('field_name' => 'tags'));
+
+$form->addFileUpload(array('field_name' => 'image'));
+
+$form->addCheckbox(array('field_name' => 'published', 'label' => 'Publish Immediately', 'value' => 1));
+
+$form->addSubmit("Save &raquo;");
+?>
+</div>

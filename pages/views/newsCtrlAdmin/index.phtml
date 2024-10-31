@@ -1,0 +1,87 @@
+<div class='wrap'>
+<div id='icon-edit' class='icon32'><br/></div>
+<h2>News</h2>
+
+		<?php ne_urlHelper_ajaxURL(array()) ?>
+
+<p>
+<?php $addURL = ne_urlHelper_adminURL(array(
+	'controller' => 'newsCtrlAdmin',
+	'action' => 'add'
+));
+?>
+<a href='<?php echo $addURL ?>' class='button-primary'>Add News &raquo;</a>
+</p>
+<?php if( $news_4c5c429147dc8->count() <= 0 ): ?>
+	<p>
+	There are no news items. Click on "add news item" to start adding some items.
+	</p>
+<?php else: ?>
+	<p>
+		<? //Removed the link to customize headlines because it isn't working and isn't mission critical ?>
+		<?php
+		$headlineURL = ne_urlHelper_adminURL(array(
+			'controller' => 'newsCtrlAdmin',
+			'action' => 'previewHeadlines'));
+		?>
+	</p>
+
+	<p>
+		<b>Bulk Actions</b><br/>
+		<a href='#' id='bulk-select-all'>select all</a> | 
+		<a href='#' id='bulk-select-none'>select none</a> 
+		<br/>
+		Action: 
+		<select id='bulk-action'>
+			<option checked='checked' value='null'>--select an action--</option>
+			<option value='bulkPublish'>Publish</option>
+			<option value='bulkUnpublish'>Un-Publish</option>
+			<option value='bulkDelete'>Delete</option>
+		</select>
+	</p>
+
+	<table class='widefat fixed post'>
+		<thead>
+			<tr>
+				<th></th>
+				<th>Date</th>
+				<th class='manage-column'>Title</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+
+	<?php while( $news = $news_4c5c429147dc8->next() ): ?>
+		<tr class='<?php echo ($news->published == 0 ? 'unpublished' : '') ?>'>
+			<td>
+				<input class='bulk-action' id='news-<?php echo $news->id ?>' type='checkbox' autocomplete='off' />
+			</td>
+			<td>
+				<?php $news->print_date() ?>
+			</td>
+			<td>
+				<?php echo $news->headline ?>
+			</td>
+			<td>
+				<?php
+				$editURL = ne_urlHelper_adminURL(array(
+					'controller' => 'newsCtrlAdmin', 
+					'action' => 'edit', 
+					'ktarguments' => "id={$news->id}"));
+
+				$deleteURL = ne_urlHelper_adminURL(array(
+					'controller' => 'newsCtrlAdmin',
+					'action' => 'delete',
+					'ktarguments' => "id={$news->id}"
+				));
+				?>
+
+				<a href='<?php echo $editURL ?>'>edit</a> | 
+				<a href='<?php echo $deleteURL ?>' class='deleteNewsItem' rel='<?php echo $news->headline?>'>delete</a>
+			</td>
+		</tr>
+	<?php endwhile; ?>
+	</table>
+
+<?php endif; ?>
+
+</div>

@@ -1,0 +1,84 @@
+<style type='text/css'>
+table h2 {
+	cursor: pointer;
+	padding-left: 2em;
+}
+
+table tr td h2 span {
+	width: 2em;
+	display: block;
+	float: left;
+}
+
+table tr {
+	display: none;
+}
+
+table tr.header {
+	display: table-row;
+}
+</style>
+
+<div class='wrap'>
+<div id='icon-edit' class='icon32'><br/></div>
+<h2>Settings</h2>
+
+<p>You can set the default values here.</p>
+
+<?php
+$form = new ne_Form( "save", ne_get_plugin_folder() . "/pages/optionsCtrlAdmin", 'newsandeventsOptionsForm', false, true );
+
+$form->addNonce();
+
+$ops = ne_Options::$optionsDef;
+$prevView = ''; //Holds on to the last option view, e.g. 'headlines', 'newslist', 'eventslist', etc.
+$viewDef = array();
+foreach($ops as $op) {
+	list($view) = explode('_', $op['name']);
+	
+	if($view != $prevView) { //New view! print out a header
+		$viewDef = ne_Options::$viewsDef[$view]; //Array containing descriptors for this view
+		ne_Table()->newTableRow(array('class' => 'header'));
+		ne_Table()->newTableColumn();
+		echo '<h2><span>+</span> ' . $viewDef['header'] . '</h2>';
+		ne_Table()->endTableRow();
+	}
+
+	if($op['type'] == 'integer') {
+		$form->addTextField(array(
+			'field_name' => $op['name'],
+			'label' => $op['label'],
+			'value' => ne_optionsHelper_get($op['name']),
+			'size' =>  $op['size']
+		));
+	}
+	else if($op['type'] == 'text') {
+		$form->addTextField(array(
+			'field_name' => $op['name'],
+			'label' => $op['label'],
+			'value' => ne_optionsHelper_get($op['name'])
+		));
+	}
+	else if($op['type'] == 'radio') {
+		$form->addSelect(array(
+			'field_name' => $op['name'],
+			'label' => $op['label'],
+			'options' => $op['options'],
+			'value' => ne_optionsHelper_get($op['name'])
+		));
+	}
+	else if($op['type'] == 'checkbox') {
+		$form->addCheckbox(array(
+			'field_name' => $op['name'],
+			'value' => ne_optionsHelper_get($op['name']),
+			'label' => $op['label'],
+		));
+	}
+
+	$prevView = $view;
+}
+
+$form->addSubmit("Save Settings &raquo;");
+?>
+
+</div>

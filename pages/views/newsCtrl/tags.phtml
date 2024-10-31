@@ -1,0 +1,9 @@
+<?php while($tag = $tags_4c5c429149af8->next()): ?>
+	<?php 
+	$linkURL = ne_urlHelper_publicURL(array(
+		'action' => 'index'
+	));
+	?>
+
+	<a href='<?php echo $linkURL ?>'><?php echo $tag->name ?></a><br/>
+<?php endwhile; ?>

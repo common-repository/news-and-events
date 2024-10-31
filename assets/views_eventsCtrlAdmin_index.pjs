@@ -1,0 +1,51 @@
+jQuery(document).ready(function() {
+	jQuery("select#bulk-action").click(function() {
+		var checked = jQuery("input.bulk-action:checked");
+		if(jQuery(this).val() != 'null') {
+			if(checked.length > 0) {
+				var ids = new Array();
+				var counter = 0;
+				checked.each(function() {
+					ids[counter] = jQuery(this).attr("id").replace("events-", "");
+					counter++;
+				});
+
+				var action = jQuery(this).val();
+
+				if(action == 'bulkDelete') {
+					var confirmation = confirm("Are you sure you want to delete these Events?");
+					if(confirmation == false) {
+						//Move it back to "--select an an action--"
+						jQuery("select#bulk-action")[0].selectedIndex = 0;
+						return;
+					}
+				}
+
+				//Build the correct URL to redirect to
+				var adminURL = "<?php echo ne_urlHelper_adminURL(array('pluglet' => ne_get_plugin_folder(), 'controller' => 'eventsCtrlAdmin', 'action' => 'ajaxaction')) ?>";
+				adminURL = adminURL.replace('ajaxaction', action);
+				adminURL += '&ids=' + ids.join(',');
+
+				window.location = adminURL;
+			}
+			else {
+				//Move it back to "--select an action--"
+				alert("Please select at least one Event first.");
+				jQuery("select#bulk-action")[0].selectedIndex = 0;
+			}
+		}
+	});
+
+	jQuery("a#bulk-select-all").click(function() {
+		jQuery("input.bulk-action").each(function() {
+			jQuery(this).prop('checked', true);
+		});
+	});
+
+	jQuery("a#bulk-select-none").click(function() {
+		jQuery("input.bulk-action").each(function() {
+			jQuery(this).prop('checked', false);
+		});
+	});
+});
+

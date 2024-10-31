@@ -1,0 +1,18 @@
+<?php
+$installURL = ne_urlHelper_adminURL(array(
+	'controller' => 'newsAndEvents',
+	'action' => 'install'
+));
+
+$testURL = ne_urlHelper_adminURL(array(
+	'controller' => 'newsCtrlAdmin',
+	'action' => 'index'
+));
+?>
+
+<div id='wrap'>
+<h2>Do you want to install News & Events?</h2>
+<p>News &amp; Events needs to install several database tables</p>
+
+<a href='<?php echo $installURL ?>'>Install News & Events</a>
+</div>

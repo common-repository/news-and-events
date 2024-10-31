@@ -1,0 +1,80 @@
+<div class='wrap'>
+<div id='icon-edit' class='icon32'><br/></div>
+<h2>Events</h2>
+
+
+
+<p>
+	<?php //Set up the AJAX parameters for the Add button
+		$addURL = ne_urlHelper_adminURL(array(
+						'controller' => 'eventsCtrlAdmin',
+						'action' => 'add'
+		));
+	?>
+	
+	<a href='<?php echo $addURL ?>' class='button-primary'>Add Event &raquo;</a>
+</p>
+<?php if( $events_4c5c42914e22d->count() == 0 ): ?>
+	<p>
+		There are no events. Click on "add new event" above to start adding some events.
+	</p>
+<?php else: ?>
+	<table id="event-index" class='widefat fixed post'>
+	
+		<thead>
+			<tr>
+				<th class="select-column">Select</th>
+				<th class="title-column">Title</th>
+				<th class="start_column">Start</th>
+				<th class="actions-column">Actions</th>
+			</tr>
+		</thead>
+
+	<?php while($event = $events_4c5c42914e22d->next()): ?>
+		<tr class='<?php echo $event->published == 0 ? 'unpublished' : '' ?>'>
+			<td class="select-column">
+				<input class='bulk-action' id='events-<?php echo $event->id ?>' type='checkbox' autocomplete='off' />
+			</td>
+			<td class="title-column">
+				<?php echo $event->title ?>
+			</td>
+			<td class="start_column">
+				<?php echo $event->start_date_formatted() ?>
+			</td>
+			<td class="actions-column">
+				<?php
+				$editURL = ne_urlHelper_adminURL(array(
+					'controller' => 'eventsCtrlAdmin', 
+					'action' => 'edit', 
+					'ktarguments' => "id={$event->id}"));
+
+				$deleteURL = ne_urlHelper_adminURL(array(
+					'controller' => 'eventsCtrlAdmin',
+					'action' => 'delete',
+					'ktarguments' => "id={$event->id}"
+				));
+				?>
+
+				<a href='<?php echo $editURL ?>'>edit</a> | 
+				<a href='<?php echo $deleteURL ?>'>delete</a>
+			</td>
+		</tr>
+	<?php endwhile; ?>
+	</table>
+	<p>
+		<b>Bulk Actions</b><br/>
+		<a href='#' id='bulk-select-all'>select all</a> | 
+		<a href='#' id='bulk-select-none'>select none</a> 
+	</p>
+	<p>
+		<select id='bulk-action'>
+			<option checked='checked' value='null'>--select an action--</option>
+			<option value='bulkPublish'>Publish</option>
+			<option value='bulkUnpublish'>Un-Publish</option>
+			<option value='bulkDelete'>Delete</option>
+		</select>
+		the selected events.
+	</p>
+<?php endif; ?>
+
+</div>

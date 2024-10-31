@@ -1,0 +1,50 @@
+<?php
+echo "<div class='news_and_events ne_headlines_view'>";
+	
+	echo '<table><tbody>';
+		while( ($news = $news_4c5c429147dc8->next()) !== null ) {
+			//One table row for each event
+			echo '<tr>';
+			
+				//Thumbnail
+				if ($settings_4c5c4291484df['headlines_show_thumbnail_image']) {
+					//Settings call for a thumbnail so create the table cell
+					echo '<td class="ne_column_1">';
+					if ($news->has_thumbnail()) {
+						//This news item has a thumbnail so display it
+						echo "<a class='ne_thumbnail' href='" . $news->imageURL() . "'><img src='" . $news->thumbnailURL() . "' /></a>";
+					}
+					echo '</td>';
+				} 
+				
+				//Create a table cell for Headline, date, author & excerpt
+				echo '<td class="ne_column_2">';
+				
+					//Headline link
+					if (($settings_4c5c4291484df['headlines_show_headline']) && ($news->has_headline())) {
+						echo "<span class='ne_headline'>" . ne_newsHelper_detail_link($news->id, $news->headline) . "</span>";
+					}
+				
+					//Date
+					if (($settings_4c5c4291484df['headlines_show_date']) && ($news->has_date())) {
+						echo "<span class='ne_date'>" . $news->format_date($settings_4c5c4291484df['headlines_date_format']) . "</span>";
+					}
+					
+					//Author
+					if (($settings_4c5c4291484df['headlines_show_author']) && ($news->has_author())) {
+						echo "<span class='ne_author'> by " . $news->author . "</span>";
+					}
+					
+					//Excerpt
+					if (($settings_4c5c4291484df['headlines_show_excerpt']) && ($news->has_excerpt())) {
+						echo "<span class='ne_excerpt'>" . $news->excerpt . "</span>";
+					}
+				echo '</td>';
+			
+			echo '</tr>';
+		}
+	
+	echo '</tbody></table>';
+
+echo "</div>";	
+?>

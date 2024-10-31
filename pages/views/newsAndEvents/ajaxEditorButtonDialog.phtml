@@ -1,0 +1,231 @@
+<html>
+<head>
+
+<?php wp_enqueue_script('jquery'); ?>
+<?php do_action('wp_head') ?>
+
+<script type = 'text/javascript' src='http://<?php echo $_SERVER['HTTP_HOST'] ?><?php echo dirname(dirname($_SERVER['PHP_SELF'])) ?>/wp-includes/js/tinymce/tiny_mce_popup.js'></script>
+<script type = 'text/javascript' src='<?php echo get_option('siteurl') ?>/wp-includes/js/tinymce/tiny_mce_popup.js'></script>
+<link rel='stylesheet' href='<?php echo get_option('siteurl') ?>/wp-includes/js/tinymce/themes/advanced/skins/wp_theme/dialog.css'></script>
+
+<script type='text/javascript'>
+jQuery(document).ready(function($) {
+	<?php 
+	foreach(ne_Options::$viewsDef as $viewName => $viewDef):
+		$options = ne_optionsHelper_filterOptions($viewName);
+
+		$showJavascript = ne_optionsHelper_buildShowArrayJavascript($options);
+
+		foreach($options as $key => $option) {
+			if(false !== strpos($option['name'], 'show')) unset($options[$key]); //These are only for options that aren't shows
+		}
+
+		//Add a custom short tag to the article view. This corresponds to a list box that displays a list of all news articles. This isn't an official option, which is why we have to add this custom option.
+		if($viewName == 'article') {
+			$options[] = array(
+				'short_tag' => 'id',
+				'type' => 'integer',
+				'name' => 'articleID'
+			);
+		}
+
+		$optionsLen = count($options);
+		?>
+
+		// When a clicks a button to insert a view onto a page, this handler is called (e.g. "Insert News List")
+		$('#insert<?php echo ucwords($viewName) ?>').click(function() {
+			tags = {
+				'view': '<?php echo $viewDef['action'] ?>'<?php echo ($optionsLen > 0 ? ',' : '') ?>
+				<?php foreach($options as $key => $option): ?>
+					<?php if($option['type'] == 'radio'): ?>
+						'<?php echo $option['short_tag'] ?>': $('#<?php echo $option['name']?> option:selected').val() == -1 ? null : $('#<?php echo $option['name'] ?> option:selected').val()<?php echo ($key == ($optionsLen - 1) ? '' : ',') . "\n" ?>
+					<?php else: ?>
+						'<?php echo $option['short_tag'] ?>': useDefault('<?php echo $option['name'] ?>') ? null : $('#<?php echo $option['name'] ?>').val()<?php echo (($key == $optionsLen - 1) ? '' : ',') . "\n" ?>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			}
+
+			<?php if($showJavascript != '{}'): ?>
+			tags = showFields(tags, <?php echo $showJavascript ?>);
+			<?php endif; ?>
+
+			insertAndClose(buildShortTag('<?php echo $viewDef['type'] ?>', tags));
+
+			return false;
+		});
+
+		<?php
+	endforeach;
+	?>
+
+	$("h2").click(function() {
+		var fieldset = $(this).next('fieldset');
+		if(fieldset.css('display') == 'none') {
+			fieldset.slideDown();
+			$(this).children('span').text('-');
+		}
+		else {
+			fieldset.slideUp();
+			$(this).children('span').text('+');
+		}
+	});
+
+	//Convenience function to see if the checkbox to use the default value is checked
+	function useDefault(fieldName) {
+		if($("#" + fieldName + " option:selected").val() == 'default') return true;
+		if($("#" + fieldName + "_useDefault").is(':checked')) return true;
+		return false;
+	}
+
+	//Builds onto the 'tags' object with the keys/values for different 'show' settings, ("Show Tags", "Show Date", etc.) which all follow a set pattern. Field ID will always equal formPrefix_show_optionName. Field will always have three options: default, show, and hide
+	function showFields(tags, shows) {
+		for(var i in shows) {
+			var show = shows[i];
+			var value = $("#" + show + " option:selected").val();
+			
+			if(value != 'default') {
+				tags[i] = value == 'show' ? true : false;
+			}
+		}
+		return tags;
+	}
+
+	//Takes the tags object and puts together a short tag string
+	function buildShortTag(formPrefix, tags) {
+		var tag = "[" + formPrefix;
+		for(var tagName in tags) {
+			if(tags[tagName] !== null) { //Null means use default
+				tag += " " + tagName + "='" + tags[tagName] + "'";
+			}
+		}
+		tag += "]";
+		return tag;
+	}
+
+	//Event handler for "use default" checkboxes. This function hides the checkbox, and shows the corresponding form control and vice versa.
+	$(".useDefault").click(function() {
+		var sisterID = $(this).attr('id').replace('_useDefault', '');
+		$("#" + sisterID).toggle();
+	});
+
+	//Event handler for "Show Advanced" links. This code folds down the advanced options, and if clicked again folds them back up.
+	$(".showAdvanced").click(function() {
+		var div = $(this).parent().next('div.advanced');
+
+		if(div.css('display') == 'none') {
+			div.slideDown();
+			$(this).text('Hide advanced settings');
+		}
+		else {
+			div.slideUp();
+			$(this).text('Show advanced settings');
+		}
+	});
+});
+
+// Inserts the given text into the editor and closes the dialog box
+function insertAndClose(content) {
+	var ed = tinyMCEPopup.editor;
+	ed.execCommand('mceInsertContent', false, content);
+	tinyMCEPopup.close();
+}
+</script>
+
+<style type='text/css'>
+h2 {
+	cursor: pointer;
+}
+
+fieldset {
+	display: none;
+}
+
+div.advanced {
+	display: none;
+}
+</style>
+
+</head>
+
+<body>
+
+<?php
+
+	
+/**
+ * WHAT THIS DOES:
+ * - Loops through all the different views.
+ * - Loops through all the options that belong to each of these views.
+ * - Prints out the correct control for each view (checkbox, radiobox, etc.)
+ */
+$viewsDef = ne_Options::$viewsDef; // As defined in models/optionsModel.php
+
+$oldType = '';
+foreach($viewsDef as $viewName => $viewDef) {
+	$options = ne_optionsHelper_filterOptions($viewName);
+
+	//Print out the header ("News" or "ne_Events")
+	if($viewDef['type'] != $oldType) {
+		echo "<h1>" . ucwords($viewDef['type']) . "</h1>";
+	}
+
+	echo "<h2><span>+</span> {$viewDef['header']}</h2>";
+	echo "<fieldset>";
+	
+	echo "<p>{$viewDef['description']}</p>"; //A description of the view
+
+	//We need to insert a custom control for the article section. It's a list box of all the news articles so the user can select which article to insert
+	if($viewName == 'article') {
+		?>
+
+		<p>
+		Article:<br/>
+		<select size='5' id='articleID'>
+		<?php while($news = $news_4c5c429147dc8->next()): ?>
+			<option value='<?php echo $news->id ?>'><?php echo $news->headline ?></option>
+		<?php endwhile; ?>
+		</select>
+		</p>
+
+		<?php
+	}
+
+	echo "<p><a href='#' class='showAdvanced'>Show advanced settings</a></p>";
+
+	echo "<div class='advanced'>";
+	
+	foreach($options as $op) {
+		echo "<p>";
+		if($op['type'] == 'text' || $op['type'] == 'integer') {
+			echo $op['label'] . ': ';
+
+			echo "<input style='display: none' type='text' size='{$op['size']}' id='{$op['name']}' value='" . ne_optionsHelper_get($op['name']) . "' />";
+			echo ne_optionsHelper_useDefaultCheckbox($op['name']);
+		}
+		else if($op['type'] == 'checkbox') {
+			ne_optionsHelper_showDropDown($op['name'], $op['label']);
+		}
+		else if($op['type'] == 'radio') {
+			echo $op['label'] . ': ';
+
+			echo "<select id='{$op['name']}'>";
+			echo "<option value='-1'>Use Default</option>";
+			foreach($op['options'] as $value => $text) {
+				echo "<option value='$value'>$text</option>";
+			}
+			echo "</select>";
+		}
+		echo "</p>";
+	}
+	echo "</div>";
+
+	echo "<p><input type='button' id='insert" . ucwords($viewName) . "' value='Insert " . $viewDef['header'] . "' /></p>";
+
+	echo "</fieldset>";
+
+	$oldType = $viewDef['type'];
+}
+
+?>
+</body>
+</html>

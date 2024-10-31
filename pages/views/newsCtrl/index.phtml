@@ -1,0 +1,89 @@
+<?php 
+echo "<div class='news_and_events ne_news_list'>";
+	echo '<table><tbody>';
+		while( ($news = $news_4c5c429147dc8->next()) !== null ) {
+			//One table row for each news item
+			echo '<tr class="ne_newsitem-' . $news->id . '">';
+
+				//Thumbnail
+				if ($settings_4c5c4291484df['newslist_show_thumbnail_image']) {
+					//Settings call for a thumbnail so create the table cell
+					echo '<td class="ne_column_1">';
+					if ($news->has_thumbnail()) {
+						//This news item has a thumbnail so display it
+						echo "<a class='ne_thumbnail' href='" . $news->imageURL() . "'><img src='" . $news->thumbnailURL() . "' /></a>";
+					}
+					echo '</td>';
+				} 
+			
+				//Create a table cell for Headline, date, author & tags
+				echo '<td class="ne_column_2">';
+					//Headline
+					if (($settings_4c5c4291484df['newslist_show_headline']) && ($news->has_headline())) {
+						echo "<span class='ne_headline'>";
+						if($settings_4c5c4291484df['newslist_link_detail']) {
+							echo ne_newsHelper_detail_link($news->id, $news->headline);
+						}
+						else {
+							echo $news->headline;
+						}
+						echo "</span>";
+					}
+				
+					//Date
+					if (($settings_4c5c4291484df['newslist_show_date']) && ($news->has_date())) {
+						echo "<span class='ne_date'>" . $news->format_date($settings_4c5c4291484df['newslist_date_format']) . "</span>";
+					}
+					
+					//Author
+					if (($settings_4c5c4291484df['newslist_show_author']) && ($news->has_author())) {
+						echo "<span class='ne_author'> by " . $news->author . "</span>";
+					}
+					
+					//Tags
+					if (($settings_4c5c4291484df['newslist_show_tags']) && ($news->has_tags())) {
+						echo "<span class='ne_tags'> tagged as " . ne_newsHelper_tag_links($news) . "</span>";
+					}
+				
+				echo '</td>';
+		
+				//Article text
+				if ($settings_4c5c4291484df['newslist_show_excerpt']) {
+					//Settings call for an excerpt so create a cell for it
+					echo '<td class="ne_column_3">';
+						echo "<span class='ne_excerpt'>";
+							if ($news->has_excerpt()) {
+								//This news item has an excerpt so display it
+								if($settings_4c5c4291484df['newslist_show_more'] == '1') {
+									$detail_link = ne_newsHelper_detail_link($news->id, ' more &raquo;');
+								}
+								else {
+									$detail_link = '';
+								}
+
+								echo ne_newsHelper_text_with_more_link($news->excerpt, $detail_link);
+							}
+						echo "</span>";
+					echo '</td>';
+				}
+
+			echo '</tr>';
+		}
+	echo '</tbody></table>';
+	
+	//Add Previous and Next buttons if appropriate
+	if($pageBelow_4c5c4291484df) {
+		 echo '<span class="ne_previous_page">';
+		 	echo ne_newsHelper_previousPage($pageNumber_4c5c4291484df);
+		echo '</span>'; 
+	}
+	if($pageAbove_4c5c4291484df) {
+		echo '<span class="ne_next_page">';
+			echo ne_newsHelper_nextPage($pageNumber_4c5c4291484df);
+		echo '</span>';
+	} 
+	
+echo "</div>";
+?>
+
+

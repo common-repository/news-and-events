@@ -1,0 +1,27 @@
+<table>
+	<tr>
+		<th>Title</th>
+		<th>Text</th>
+		<th>Date</th>
+	</tr>
+
+<?php while( null != ($news = $news_4c5c429147dc8List->next()) ): ?>
+	<tr>
+ 
+		<td>
+			<?php echo $news->title ?>
+		</td>
+ 
+		<td>
+			<?php echo $news->shortText() ?>
+		</td>
+ 
+		<td>
+			<?php echo $news->prettyDate() ?>
+		</td>
+
+		<td>
+			<a href='?page=<?php echo ne_get_plugin_folder() ?>/newsCtrl&action=detail/id=<?php echo $news->id ?>'>more &raquo;</a>
+	</tr>
+<?php endwhile; ?>
+</table>

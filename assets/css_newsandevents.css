@@ -1,0 +1,182 @@
+/* This file may be overwritten with updates to the News and Events Plugin */
+
+
+/* *************************** Admin *******************/
+table tr.unpublished {
+	color: gray;
+}
+
+/****************************** Public Overall *****************/
+.news_and_events {
+	
+}
+
+.news_and_events td {
+	padding-bottom:5px;
+}
+
+/* Previous and Next Buttons */
+.ne_next_page {
+	float:right;
+}
+
+.ne_previous_page {
+ 	
+}
+/******************** Fields **************************/
+/* Shared News and Events */
+
+.ne_image {
+	
+}
+
+.ne_thumbnail {
+	
+}
+
+.ne_date {
+	display:block;
+}
+
+.ne_tags {
+	display:block;
+}
+
+
+/* News */
+.ne_headline {
+	display:block;
+}
+
+.ne_author {
+	display:block;
+}
+
+.ne_excerpt {
+	display:block;
+}
+
+.ne_article {
+	display:block;
+}
+
+/* Events */
+.ne_title {
+	display:block;
+}
+
+.ne_start_date {
+	
+}
+
+.ne_end_date {
+	
+}
+
+.ne_location {
+	display:block;
+}
+
+.ne_date_location_text {
+	display:block;
+}
+
+.ne_short_description {
+	display:block;
+}
+
+.ne_long_description {
+	display:block;
+}
+
+/********************* Table Columns *********************/
+.ne_column_1 {
+	padding-right:10px;
+	vertical-align:top;
+}
+
+.ne_column_2 {
+	padding-right:10px;
+	vertical-align:top;
+}
+
+.ne_column_3 {
+	vertical-align:top;
+}
+
+
+/************************ Views ***************************/
+.ne_headlines_view {
+	
+}
+
+.ne_news_list {
+	
+}
+
+.ne_article_view {
+	
+}
+
+.ne_event_title_view {
+	
+}
+
+.ne_event_listView {
+	
+}
+
+.ne_event_detail_view {
+	
+}
+/************************* Combination ************************/
+
+/* news article view */
+.ne_article_view .ne_headline {
+	margin-bottom:5px;
+}
+
+.ne_article_view .ne_thumbnail {
+	float:left;
+	margin-right:10px;
+	margin-bottom:10px;
+}
+
+.ne_article_view .ne_article {
+	clear:both;
+	padding-top: 10px;
+}
+
+/* news headline view */
+.ne_headlines_view td {
+	padding: 5px 0;
+}
+
+.ne_headlines_view .ne_headline {
+	font-size: 125%;
+	margin-bottom: 2px;
+}
+
+/* news list view */
+.ne_news_list table {
+	width: 100%;
+}
+
+/* events detail view */
+.ne_event_detail_view .ne_title{
+	font-weight:bold;
+	margin-bottom:5px;	
+}
+.ne_event_detail_view .ne_thumbnail {
+	float:left;
+	margin-right:10px;
+	margin-bottom:10px;
+}
+
+.ne_event_detail_view .ne_short_description {
+	clear:both;
+}
+
+.ne_event_detail_view .ne_long_description {
+	clear:both;
+}

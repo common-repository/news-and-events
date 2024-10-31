@@ -1,0 +1,35 @@
+<?php
+$validActions = array(
+	'news' => array(
+		'list',
+		'headlines',
+		'article',
+	),
+	'events' => array(
+		'title',
+		'listView',
+		'detail'
+	)
+);
+
+?>
+
+<p><strong>Action not Found</strong></p>
+
+<p>News &amp; Events cannot find this action.</p>
+
+<p><strong>Available Actions</strong></p>
+
+<table>
+	<?php foreach(array('news', 'events') as $type): ?>
+		<tr>
+			<th><?php echo ucwords($type) ?></th>
+		</tr>
+
+		<?php foreach($validActions[$type] as $name): ?>
+			<tr>
+				<td><?php echo $name ?></td>
+			</tr>
+		<?php endforeach; ?>
+	<?php endforeach; ?>
+</table>

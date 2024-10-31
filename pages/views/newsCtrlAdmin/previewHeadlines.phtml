@@ -1,0 +1,86 @@
+<style type='text/css'>
+#newsitem-headlines {
+	cursor: pointer;
+}
+
+#newsitem-headlines li {
+	font-size: 16pt;
+	margin: -1px;
+	padding: 10px;
+}
+
+#newsitem-headlines li.hidden {
+	color: gray;
+}
+
+#newsitem-headlines li.stuck {
+	border-left: 5px solid #FFBD87;
+}
+
+#time-at-top {
+}
+</style>
+
+<div class='wrap'>
+	<h1>Headlines Preview</h1>
+
+	<p>By default, the headlines are sorted by date. However, you can manually change the order here by dragging and dropping items to the preferred position in the list.</p>
+
+	<p>You can drag an item to the top of the list, then set how long that item should stay on the top of the list.</p>
+
+	<p>
+
+	<?php $first = $newsItems_4c5c4291497f5->getFirst() ?>
+	<div id='time-at-top' style='<?php echo ($first->sortDateSet() ? '' : 'display: none') ?>'>
+		Stay on top until: 
+		<?php
+		$curMonth = $first->sortMonth();
+		$daysInMonth = date('t', mktime(0, 0, 0, $first->sortMonth(), $first->sortDay(), $first->sortYear()));
+
+		$curDay = $first->sortDay();
+
+		$startYear = date('Y');
+		$curYear = $first->sortYear();
+		?>
+		<select id='time-at-top-month' autocomplete='off'>
+		<?php for($month = 1; $month <= 12; $month++): ?>
+			<option value='<?php echo $month ?>' <?php echo ($month == $curMonth ? "selected='selected'" : '') ?>><?php echo date('F', mktime(0, 0, 0, $month + 1, 0, 0)) ?></option>
+		<?php endfor; ?>
+		</select>
+
+		<select id='time-at-top-day' autocomplete='off'>
+		<?php for($day = 1; $day <= $daysInMonth; $day++): ?>
+			<option value='<?php echo $day ?>' <?php echo ($day == $curDay ? "selected='selected'" : '') ?>><?php echo $day ?></option>
+		<?php endfor; ?>
+		</select>
+
+		<select id='time-at-top-year' autocomplete='off'>
+		<?php for($year = $startYear; $year <= $curYear + 5; $year++): ?>
+			<option value='<?php echo $year ?>' <?php echo ($year == $curYear ? "selected='selected'" : '') ?>><?php echo $year ?></option>
+		<?php endfor; ?>
+		</select>
+
+		<input type='submit' value='Set' id='time-at-top-submit' />
+	</div>
+
+	<ul id='newsitem-headlines'>
+	<?php $counter = 0; ?>
+	<?php while($news = $newsItems_4c5c4291497f5->next()): ?>
+		<li class='<?php echo ($news->sortDateSet() === true ? 'stuck' : '') ?> <?php echo ($counter >= $numHeadlines_4c5c42914c63e ? 'hidden' : '') ?>' id='newsitem-<?php echo $news->id ?>'>
+			<?php echo $news->headline ?>
+
+			<?php if($news->sortDateSet()): ?>
+				<a href='<?php echo ne_urlHelper_adminURL(array('controller' => 'newsCtrlAdmin', 'action' => 'resetHeadline', 'arguments' => 'id=' . $news->id)) ?>'>(reset)</a>
+			<?php endif; ?>
+		</li>
+		<?php $counter++ ?>
+	<?php endwhile; ?>
+	</ul>
+	</p>
+	
+	<?php
+	$form = new ne_Form("headlinesOrder", ne_get_plugin_folder() . "/pages/newsCtrlAdmin", "newsitemHeadlineOrderForm");
+	echo "<input type='hidden' id='headlines_num_items' value='{$numHeadlines_4c5c42914c63e}' />";
+	//$form->addSubmit("Update &raquo;");
+	?>
+</div>

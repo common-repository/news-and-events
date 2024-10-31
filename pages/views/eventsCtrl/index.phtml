@@ -1,0 +1,8 @@
+<?php while( !$eventsList_4c5c4291513a7->EOF() ): ?>
+<p>
+	<b><a href='<?php echo get_bloginfo('wp_url') ?>/events/?page=<?php echo ne_get_plugin_folder() ?>/eventsCtrl/detail/id=<?php echo $eventsList_4c5c4291513a7->fw_recordset->fields['id'] ?>'><?php echo $eventsList_4c5c4291513a7->fw_recordset->fields['title'] ?></a></b>
+	<?php echo EventsHelper::formatDate($eventsList_4c5c4291513a7->fw_recordset->fields['date']) ?>
+</p>
+
+<?php $eventsList_4c5c4291513a7->moveNext() ?>
+<?php endwhile; ?>

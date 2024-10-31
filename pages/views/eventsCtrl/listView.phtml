@@ -1,0 +1,85 @@
+<?php 
+echo "<div class='news_and_events ne_event_listView'>";
+	echo '<table><tbody>';
+	while( ($event = $events_4c5c42914e22d->next() ) !== null ) {
+		//One table row for each event
+		echo '<tr class="ne_event-' . $event->id . '">';
+		
+			//Thumbnail
+			if ($settings_4c5c4291484df['eventList_show_thumbnail_image']) {
+				//Settings call for a thumbnail so create the table cell
+				echo '<td class="ne_column_1">';
+				if ($event->has_thumbnail()) {
+					//This event has a thumbnail so display it
+					echo "<a class='ne_thumbnail' href='" . $event->imageURL() . "'><img src='" . $event->thumbnailURL() . "' /></a>";
+				}
+				echo '</td>';
+			} 
+			
+			//Create a table cell for Title, Dates, Location & tags
+			echo '<td class="ne_column_2">';
+			
+				//Title link
+				if (($settings_4c5c4291484df['eventList_show_title']) && ($event->has_title())) {
+					echo "<span class='ne_title'>" . ne_eventsHelper_detail_link($event->id, $event->title) . "</span>";
+				}
+			
+				//Start date
+				if (($settings_4c5c4291484df['eventList_show_start_date']) && ($event->has_start_date())) {
+					echo "<span class='ne_date'";
+						echo "<span class='ne_start_date'>" . $event->start_date_formatted($settings_4c5c4291484df['eventList_date_format']) . "</span>";
+						
+						//End date
+						if (($settings_4c5c4291484df['eventList_show_end_date']) && ($event->has_end_date())) {
+							echo "<span class='ne_end_date'> - " . $event->end_date_formatted($settings_4c5c4291484df['eventList_date_format']) . "</span>";
+						}
+					echo '</span>';
+				}
+				
+				//Location
+				if (($settings_4c5c4291484df['eventList_show_location']) && ($event->has_location())) {
+					echo "<span class='ne_location'>" . $event->location . "</span>";
+				}
+				
+				//Date-Location field
+				if (($settings_4c5c4291484df['eventList_show_date_location_description']) && ($event->has_date_location_text())) {
+					echo "<span class='ne_date_location'>" . $event->date_location_text . "</span>";
+				}
+				
+				//Tags
+				if (($settings_4c5c4291484df['eventList_show_tags']) && ($event->has_tags())) {
+					echo "<span class='ne_tags'> tagged as " . ne_eventsHelper_tag_links($event) . "</span>";
+				}
+			
+			echo '</td>';
+			
+			//Short Description
+			if ($settings_4c5c4291484df['eventList_show_short_description']) {
+				//Settings call for a short description so create a cell for it
+				echo '<td class="ne_column_3">';
+				if ($event->has_short_description()) {
+					//This event has a short description so display it
+					echo "<span class='ne_short_description'>" . $event->short_description . "</span>";
+				}
+				echo '</td>';
+			}
+		echo '</tr>';
+		
+	}
+	echo '</tbody></table>';
+	
+	//Add Previous and Next buttons if appropriate
+	if($pageBelow_4c5c4291484df) {
+		echo '<span class="ne_previous_page">';
+			echo ne_eventsHelper_previousPage($pageNumber_4c5c4291484df); 
+		echo '</span>'; 
+	}
+	if($pageAbove_4c5c4291484df) {
+		echo '<span class="ne_next_page">';
+			echo ne_eventsHelper_nextPage($pageNumber_4c5c4291484df);
+		echo '</span>';
+	} 
+	
+	//echo 'Count: ' . ($events_4c5c42914e22d->page_above == true ? 1 : 0);
+echo "</div>";
+?>

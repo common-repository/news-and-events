@@ -1,0 +1,34 @@
+<div class='wrap'>
+<h2>Add Event</h2>
+<?php
+	$form = new ne_Form( "create", ne_get_plugin_folder() . "/pages/eventsCtrlAdmin", "eventAddForm" );
+	$form->values = new ne_Event();
+
+	$form->setInstructions(array(
+	"title" => "The title of the event",
+	"date_location_text" => "Free text description of the date and/or location if they don't fit in the other fields",
+	"start_date" => "The date (and optionally, time) the event starts"
+) );
+
+//Add a security field to verify that the request really comes from here
+$form->addNonce();
+
+$form->addTextField(array('field_name' => 'title'));
+$form->addTextField(array('field_name' => 'start_date'));
+$form->addTextField(array('field_name' => 'end_date'));
+$form->addTextField(array('field_name' => 'location'));
+
+$form->addTextArea(array('field_name' => 'date_location_text',
+						'rows' => 3));
+$form->addTextArea(array('field_name' => 'short_description'));
+$form->addTextArea(array('field_name' => 'long_description'));
+
+$form->addPhotoUpload(array('field_name' => 'image'));
+
+$form->addTextField(array('field_name' => 'tags'));
+
+$form->addCheckbox(array('field_name' => 'published', 'label' => 'Publish Immediately'));
+
+$form->addSubmit("Add Event &raquo;");
+?>
+</div>
